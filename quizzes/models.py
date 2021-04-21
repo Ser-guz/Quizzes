@@ -31,7 +31,6 @@ class Category(models.Model):
 class Question(models.Model):
     """Вопрос"""
     question_text = models.CharField("Вопрос", max_length=150)
-    # quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.question_text
@@ -46,12 +45,13 @@ class Quiz(models.Model):
     name = models.CharField("Название", max_length=150)
     image = models.ImageField("Фото", upload_to="quizzes/", null=True)
     description = models.TextField("Описание")
-    date_created = models.DateTimeField("Дата создания", auto_now_add=True)
-    date_start = models.DateTimeField("Начало опроса")
-    date_end = models.DateTimeField("Завершение опроса")
+    date_created = models.DateField("Дата создания", auto_now_add=True)
+    date_start = models.DateField("Начало опроса")
+    date_end = models.DateField("Завершение опроса")
     status = models.BooleanField("Активен", default=True)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="автор")
     questions = models.ManyToManyField(Question, verbose_name="вопрос")
+    category = models.ForeignKey(Category, verbose_name="Категория", on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.name
@@ -64,7 +64,7 @@ class Quiz(models.Model):
 class AnswerQuestion(models.Model):
     """Ответ на вопрос"""
     answer_text = models.TextField("Ответ")
-    questions = models.ForeignKey(Question, on_delete=models.CASCADE)
+    questions = models.ForeignKey(Question, verbose_name="вопрос", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.answer_text

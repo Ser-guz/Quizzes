@@ -3,5 +3,6 @@ from . import views
 
 
 urlpatterns = [
-    path("", views.QuizzesView.as_view())
+    path("", views.QuizListView.as_view()),
+    path("<int:pk>/", views.QuizDetailsView.as_view()),
 ]
